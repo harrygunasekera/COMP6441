@@ -18,8 +18,15 @@ mature = ogRabbits
 maturingRabbits = []
 dyingRabbits = [[2, cyclesTillDeath - cyclesTillMature]]
 dead = 0
+command = 0
 while True:
-	input("Press Enter for another breeding cycle or CTRL C to quit!")
+	if (not isinstance(command, int)) or (isinstance(command, int) and command <= 0):
+		command = input("Press Enter for another breeding cycle, a number greater than the current number of months to skip to that point or CTRL C to quit! : ")
+		while command.isnumeric() and int(command) <= month:
+			command = input("Press any key (except numbers) for another breeding cycle, a number greater than the current number of months to skip to that point or CTRL C to quit! : ")
+		if command.isnumeric():
+			command = int(command)
+			command = command - month
 	newRabbits = (mature/2)*litterSize
 	newMature = cycle(maturingRabbits, newRabbits, cyclesTillMature)
 	mature = mature + newMature
@@ -28,6 +35,10 @@ while True:
 	mature = mature - newDead
 	alive = alive + newRabbits - newDead
 	month = month + 1
+	if isinstance(command, int):
+		command = command - 1
+		if command != 0:
+			continue
 	print("Month " + str(month))
 	print("Alive: " + str(alive))
 	print("Mature: " + str(mature))
